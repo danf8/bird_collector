@@ -9,8 +9,8 @@ class Bird(models.Model):
     description = models.TextField(max_length=250)
     age = models.IntegerField(default=0)
 
-#     # def get_absolute_url(self):
-#     #     return reverse('birds_detail', kwargs={'birds_id': birds.id})
+    def get_absolute_url(self):
+        return reverse('birds_detail', kwargs={'bird_id': self.id})
 
     def __str__(self):
         return self.name
