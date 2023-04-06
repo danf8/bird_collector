@@ -12,6 +12,10 @@
         <p>Breed: {{ bird.breed }}</p>
         <p>Age: {{ bird.age }}</p>
     </div>
+    <div class="card-action">
+        <a href="{% url 'bird_update' bird.id %}">Update</a>
+        <a href="{% url 'bird_delete' bird.id %}">Delete</a>
+    </div>
 </div>
 
 {% endblock %}

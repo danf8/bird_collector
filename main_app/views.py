@@ -24,3 +24,13 @@ class BirdCreate(CreateView):
     model = Bird
     fields = '__all__'
     template_name = 'birds/bird_form.html'
+
+class BirdUpdate(UpdateView):
+    model = Bird
+    fields = ('description', 'age')
+    template_name = 'birds/bird_form.html'
+
+class BirdDelete(DeleteView):
+    model = Bird
+    success_url = '/birds/'
+    template_name = 'birds/bird_confirm_delete.html'
