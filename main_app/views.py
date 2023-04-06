@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+# from django.http import HttpResponse
 from .models import Bird
 
 # Create your views here.
@@ -18,3 +19,8 @@ def birds_index(request):
 def birds_detail(request, bird_id):
     bird = Bird.objects.get(id=bird_id)
     return render(request, 'birds/detail.html', {'bird': bird})
+
+class BirdCreate(CreateView):
+    model = Bird
+    fields = '__all__'
+    template_name = 'birds/bird_form.html'
