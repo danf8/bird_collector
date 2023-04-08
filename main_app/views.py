@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView
 # from django.http import HttpResponse
-from .models import Bird
+from .models import Bird, Toy
 
 # Create your views here.
   
@@ -34,3 +35,7 @@ class BirdDelete(DeleteView):
     model = Bird
     success_url = '/birds/'
     template_name = 'birds/bird_confirm_delete.html'
+
+class ToyList(ListView):
+    model = Toy
+    template_name = 'toys/toy_list.html'
