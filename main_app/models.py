@@ -8,7 +8,7 @@ class Toy(models.Model):
     color = models.CharField(max_length=20)
 
     def get_absolute_url(self):
-        return reverse('toys_detail', kwargs={'pk': self.id})
+        return reverse('toy_detail', kwargs={'pk': self.id})
     
     def __str__(self):
         return self.name

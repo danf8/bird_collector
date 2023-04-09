@@ -43,3 +43,8 @@ class ToyList(ListView):
 class ToyDetail(DetailView):
     model = Toy
     template_name = 'toys/toy_detail.html'
+
+class ToyCreate(CreateView):
+    model = Toy
+    fields = '__all__'
+    template_name = 'toys/toy_form.html'
