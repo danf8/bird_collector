@@ -22,10 +22,12 @@ def home(request):
 def about(request):
     return render(request, 'about.html')
 
+@login_required
 def birds_index(request):
-    birds = Bird.objects.all()
+    birds = Bird.objects.filter(user=request.user)
     return render(request, 'birds/index.html', {'birds': birds})
 
+@login_required
 def birds_detail(request, bird_id):
     bird = Bird.objects.get(id=bird_id)
     feeding_form = FeedingForm()
@@ -33,6 +35,7 @@ def birds_detail(request, bird_id):
     toys_bird_doesnt_have = Toy.objects.exclude(id__in=bird_toy_ids)
     return render(request, 'birds/detail.html', {'bird': bird, 'feeding_form': feeding_form, 'toys': toys_bird_doesnt_have})
 
+@login_required
 def add_feeding(request, bird_id):
     form = FeedingForm(request.POST)
     if form.is_valid():
@@ -41,11 +44,13 @@ def add_feeding(request, bird_id):
         new_feeding.save()
     return redirect('birds_detail', bird_id=bird_id)
 
+@login_required
 def assoc_toy(request, bird_id, toy_id):
     bird = Bird.objects.get(id=bird_id)
     bird.toys.add(toy_id)
     return redirect('birds_detail', bird_id=bird_id)
 
+@login_required
 def remove_assoc_toy(request, bird_id, toy_id):
     bird = Bird.objects.get(id=bird_id)
     bird.toys.remove(toy_id)
@@ -64,6 +69,7 @@ def signup(request):
     form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form, 'error': error_message})
 
+@login_required
 def add_photo(request, bird_id):
     photo_file = request.FILES.get('photo-file', None)
     if photo_file:
@@ -79,7 +85,7 @@ def add_photo(request, bird_id):
     return redirect('birds_detail', bird_id=bird_id)
 
 
-class BirdCreate(CreateView):
+class BirdCreate(LoginRequiredMixin, CreateView):
     model = Bird
     fields = ('name', 'breed', 'description', 'age')
     template_name = 'birds/bird_form.html'
@@ -89,35 +95,35 @@ class BirdCreate(CreateView):
         return super().form_valid(form)
               
         
-class BirdUpdate(UpdateView):
+class BirdUpdate(LoginRequiredMixin, UpdateView):
     model = Bird
     fields = ('description', 'age')
     template_name = 'birds/bird_form.html'
 
-class BirdDelete(DeleteView):
+class BirdDelete(LoginRequiredMixin, DeleteView):
     model = Bird
     success_url = '/birds/'
     template_name = 'birds/bird_confirm_delete.html'
 
-class ToyList(ListView):
+class ToyList(LoginRequiredMixin, ListView):
     model = Toy
     template_name = 'toys/toy_list.html'
 
-class ToyDetail(DetailView):
+class ToyDetail(LoginRequiredMixin, DetailView):
     model = Toy
     template_name = 'toys/toy_detail.html'
 
-class ToyCreate(CreateView):
+class ToyCreate(LoginRequiredMixin, CreateView):
     model = Toy
     fields = '__all__'
     template_name = 'toys/toy_form.html'
 
-class ToyUpdate(UpdateView):
+class ToyUpdate(LoginRequiredMixin, UpdateView):
     model = Toy
     fields = '__all__'
     template_name = 'toys/toy_form.html'
 
-class ToyDelete(DeleteView):
+class ToyDelete(LoginRequiredMixin, DeleteView):
     model = Toy
     success_url = '/toys/'
     template_name = 'toys/toy_confirm_delete.html'
