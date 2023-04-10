@@ -9,6 +9,7 @@ urlpatterns = [
     path('birds/create/', views.BirdCreate.as_view(), name='bird_create'),
     path('bird/<int:pk>/update/', views.BirdUpdate.as_view(), name='bird_update'),
     path('bird/<int:pk>/delete', views.BirdDelete.as_view(), name='bird_delete' ),
+    path('birds/<int:bird_id>/add_feeding', views.add_feeding, name='add_feeding'),
     path('toys/', views.ToyList.as_view(), name='toys_index'),
     path('toys/<int:pk>/', views.ToyDetail.as_view(), name='toy_detail'),
     path('toys/create/', views.ToyCreate.as_view(), name='toy_create'),
