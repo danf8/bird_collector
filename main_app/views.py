@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 # from django.http import HttpResponse
 from .models import Bird, Toy
 from .forms import FeedingForm
-
+from django.contrib.auth.forms import UserCreationForm
 # Create your views here.
   
 
@@ -42,6 +45,19 @@ def remove_assoc_toy(request, bird_id, toy_id):
     bird = Bird.objects.get(id=bird_id)
     bird.toys.remove(toy_id)
     return redirect('birds_detail', bird_id=bird_id)
+
+def signup(request): 
+    error_message = ''
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('birds_index')
+        else:
+            error_message = 'Invalid sign up - try again'
+    form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form, 'error': error_message})
 
 class BirdCreate(CreateView):
     model = Bird
