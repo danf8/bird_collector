@@ -19,6 +19,7 @@ class Bird(models.Model):
     breed = models.CharField(max_length=100)
     description = models.TextField(max_length=250)
     age = models.IntegerField(default=0)
+    toys = models.ManyToManyField(Toy)
 
     def get_absolute_url(self):
         return reverse('birds_detail', kwargs={'bird_id': self.id})
