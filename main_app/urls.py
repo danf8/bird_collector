@@ -18,4 +18,5 @@ urlpatterns = [
     path('toy/<int:pk>/update', views.ToyUpdate.as_view(), name='toy_update'),
     path('toy/<int:pk>/delete', views.ToyDelete.as_view(), name='toy_delete'),
     path('accounts/signup', views.signup, name='signup'),
+    path('birds/<int:bird_id>/add_photo', views.add_photo, name='add_photo'),
 ]

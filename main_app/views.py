@@ -5,11 +5,16 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 # from django.http import HttpResponse
-from .models import Bird, Toy
+from .models import Bird, Toy, Photo
 from .forms import FeedingForm
 from django.contrib.auth.forms import UserCreationForm
 # Create your views here.
-  
+
+import uuid
+import boto3
+
+S3_BASE_URL = 'https://s3.us-east-2.amazonaws.com/'
+BUCKET = 'birdcollector-0410'
 
 def home(request):
     return render(request, 'home.html')
@@ -59,11 +64,31 @@ def signup(request):
     form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form, 'error': error_message})
 
+def add_photo(request, bird_id):
+    photo_file = request.FILES.get('photo-file', None)
+    if photo_file:
+        s3 = boto3.client('s3')
+        key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+        try:
+            s3.upload_fileobj(photo_file, BUCKET, key)
+            url = f"{S3_BASE_URL}{BUCKET}/{key}"
+            Photo.objects.create(url=url, bird_id=bird_id)
+        except Exception as error:
+            print('photo upload failed')
+            print(error)
+    return redirect('birds_detail', bird_id=bird_id)
+
+
 class BirdCreate(CreateView):
     model = Bird
-    fields = '__all__'
+    fields = ('name', 'breed', 'description', 'age')
     template_name = 'birds/bird_form.html'
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+              
+        
 class BirdUpdate(UpdateView):
     model = Bird
     fields = ('description', 'age')
